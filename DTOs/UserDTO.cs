@@ -1,0 +1,12 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace QD_Checklists.DTOs
+{
+    public class UserDTO
+    {
+        [Key]
+        public int Id { get; set; }
+        public required string Name { get; set; }
+        public required RoleDTO Role { get; set; }
+    }
+}

@@ -1,0 +1,144 @@
+<Page 
+        x:Class="QD_Checklists.Views.Pages.ChecklistAddPage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:local="clr-namespace:QD_Checklists.Views.Pages"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        xmlns:uc="clr-namespace:QD_Checklists.Views.Components"
+        xmlns:models="clr-namespace:QD_Checklists.Models"
+        xmlns:converters="clr-namespace:QD_Checklists.Converters"
+        mc:Ignorable="d"
+        d:DesignHeight="1206.2" d:DesignWidth="800"
+        Title="AddChecklistPage"
+        ui:NavigationView.HeaderContent="Create Checklist"
+        d:DataContext="{d:DesignInstance local:ChecklistAddPage, IsDesignTimeCreatable=False}"
+        ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+        ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+        Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+
+    <Page.Resources>
+        <converters:MinusFortyFiveConverter x:Key="MinusFortyFiveConverter" />
+        <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+
+        <Style TargetType="uc:EditableField">
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+        <Style TargetType="uc:UsersComboBox">
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+    </Page.Resources>
+
+    <StackPanel>
+
+        <StackPanel.Resources>
+            <HierarchicalDataTemplate DataType = "{x:Type models:ChecklistTask}" ItemsSource = "{Binding Path=SubTasks}">
+                <StackPanel Orientation="Horizontal">
+                    <ui:TextBlock Text="{Binding Path=Order}" VerticalAlignment="Center" FontSize="14"/>
+                    <ui:TextBox Grid.Column="0" Text="{Binding Path=Description}" MinWidth="200" Width="auto" Background="Transparent" BorderThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10 0"/>
+                    <CheckBox IsThreeState="True" IsChecked="{Binding Path=Status}"/>
+                    <Grid Grid.Column="1" Margin="10 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <ui:Button
+                            Grid.Column="0"
+                            Content="+"
+                            Command="{Binding Path=AddSubTaskCommand}"
+                            CommandParameter="{Binding Path=Order}"
+                            Margin="5 0"
+                        />
+                        <ui:Button
+                                Grid.Column="1"
+                                Content="-"
+                                Margin="5 0"
+                                Command="{Binding Path=ViewModel.RemoveTaskCommand, RelativeSource={RelativeSource AncestorType={x:Type local:ChecklistAddPage}}}"
+                                CommandParameter="{Binding}"
+                            />
+                    </Grid>
+                </StackPanel>
+            </HierarchicalDataTemplate>
+        </StackPanel.Resources>
+
+        <StackPanel Orientation="Horizontal" Margin="0 10">
+            <ui:Button Content="Save" HorizontalAlignment="Left" Width="100" Command="{Binding ViewModel.BtnSaveCommand}" Margin="10 0"  Background="{DynamicResource InfoBarSuccessSeverityBackgroundBrush}" Cursor="Hand"/>
+            <ui:Button Content="Cancel" VerticalAlignment="Top" Width="100" Command="{Binding ViewModel.BtnCancelCommand}" Background="{DynamicResource InfoBarErrorSeverityBackgroundBrush}" Cursor="Hand"/>
+        </StackPanel>
+
+        <!-- CHECKLIST NAME -->
+        <uc:EditableField Label="Checklist Name" Value="{Binding ViewModel.Name , Mode=TwoWay}" IsRequired="True" Margin="0 10 0 20"/>
+
+        <!-- PROJECT INFORMATION -->
+        <uc:Label Value="Project Information" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- Section - About Project -->
+            <uc:EditableField Grid.Row="0" Grid.Column="0" Label="Project Number" Value="{Binding ViewModel.ProjectNumber ,Mode=TwoWay}" IsRequired="True"/>
+            <uc:EditableField Grid.Row="0" Grid.Column="1" Label="Order" Value="{Binding ViewModel.Order ,Mode=TwoWay}" IsRequired="True"/>
+            <uc:AreaComboBox Grid.Row="0" Grid.Column="2" Label="Area" SelectedArea="{Binding ViewModel.BusinessArea, Mode=TwoWay}" IsRequired="True" Margin="10"/>
+            <uc:DivisionComboBox Grid.Row="0" Grid.Column="3" Label="Division" SelectedDivision="{Binding ViewModel.Division}" IsRequired="True" Margin="10"/>
+
+            <uc:ComponentComboBox Grid.Row="1" Grid.Column="0" Label="Component" SelectedComponent="{Binding ViewModel.Component}" IsRequired="True" Margin="10"/>
+            <uc:TypologyComboBox Grid.Row="1" Grid.Column="1" Label="Typology" SelectedTypology="{Binding ViewModel.Typology, Mode=TwoWay}" Margin="10"/>
+            <uc:PhaseComboBox Grid.Row="1" Grid.Column="2" Label="Phase" SelectedPhase="{Binding ViewModel.Phase}" IsRequired="True" Margin="10"/>
+            <uc:EditableField Grid.Row="1" Grid.Column="3" Label="Regulations" Value="{Binding ViewModel.Regulations,Mode=TwoWay}"/>
+
+            <uc:RegionComboBox Grid.Row="2" Grid.Column="0" Label="Region" SelectedRegion="{Binding ViewModel.RegionCountry}" IsRequired="True" Margin="10"/>
+        </Grid>
+
+        <Separator Margin="0 10"/>
+
+        <!-- PEOPLE -->
+        <uc:Label Value="People" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- Section - People -->
+            <uc:UsersComboBox Grid.Row="0" Grid.Column="0" Label="Project Manager" SelectedUser="{Binding ViewModel.ProjectManager, Mode=TwoWay}" IsRequired="True"/>
+            <uc:UsersComboBox Grid.Row="0" Grid.Column="1" Label="Client Manager" SelectedUser="{Binding ViewModel.ClientManager, Mode=TwoWay}" IsRequired="True"/>
+            <uc:UsersComboBox Grid.Row="0" Grid.Column="2" Label="Team Leader" SelectedUser="{Binding ViewModel.TeamLeader, Mode=TwoWay}" IsRequired="True"/>
+
+            <uc:UsersComboBox Grid.Row="1" Grid.Column="0" Label="Reviewer" SelectedUser="{Binding ViewModel.Reviewer, Mode=TwoWay}" IsRequired="True"/>
+            <uc:UsersComboBox Grid.Row="1" Grid.Column="1" Label="Checker" SelectedUser="{Binding ViewModel.Checker, Mode=TwoWay}"/>
+            <uc:UsersComboBox Grid.Row="1" Grid.Column="2" Label="Approver" SelectedUser="{Binding ViewModel.Approver, Mode=TwoWay}"/>
+        </Grid>
+
+        <Separator Margin="0 10"/>
+
+        <!-- CHECKLIST -->
+        <uc:Label Value="Checklist" />
+        <ui:Button Content="Add Task" Command="{Binding ViewModel.AddTaskCommand}" Margin="0 10"/>
+        <TreeView ItemsSource="{Binding ViewModel.Tasks}" x:Name="ListUI">
+            <TreeView.ItemContainerStyle>
+                <Style BasedOn="{StaticResource {x:Type TreeViewItem}}" TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="Margin" Value="0 5"/>
+                    <Setter Property="IsExpanded" Value="True"/>
+                </Style>
+            </TreeView.ItemContainerStyle>
+        </TreeView>
+    </StackPanel>
+</Page>
+

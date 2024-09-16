@@ -1,0 +1,40 @@
+<UserControl x:Class="QD_Checklists.Views.Components.AreaComboBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:local="clr-namespace:QD_Checklists.Views.Components"
+             xmlns:converters="clr-namespace:QD_Checklists.Converters"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance local:AreaComboBox, IsDesignTimeCreatable=False}"
+             d:DesignWidth="300">
+
+    <UserControl.Resources>
+        <!-- Add the BooleanToVisibilityConverter to the resources -->
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <ui:TextBlock Text="{Binding Label, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    FontWeight="SemiBold"/>
+            <ui:TextBlock Text=" *"
+                    FontWeight="SemiBold"
+                    Foreground="Red"
+                    Visibility="{Binding IsRequired, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        </StackPanel>
+
+        <ComboBox ItemsSource="{Binding Areas, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                SelectedItem="{Binding SelectedArea, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}"
+                DisplayMemberPath="Name"
+                SelectedValuePath="Id"
+                SelectedValue="{Binding SelectedArea}"
+                SelectionChanged="ComboBox_SelectionChanged"
+                Margin="0 5 0 0"
+                IsEditable="False"/>
+    </StackPanel>
+</UserControl>
+
+
+
